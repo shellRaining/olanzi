@@ -76,4 +76,11 @@ public struct DeviceSnapshot: Equatable, Sendable {
     public var busy = false
     public var fn = FnStatus()
     public init() {}
+
+    /// 界面不消费心跳时间戳；保留完整快照语义，仅在 UI 通知边界忽略这项遥测。
+    public func hasSamePresentation(as other: DeviceSnapshot) -> Bool {
+        var presentation = self
+        presentation.lastHeartbeat = other.lastHeartbeat
+        return presentation == other
+    }
 }

@@ -726,6 +726,8 @@ final class AppModel: ObservableObject {
         service.applyHostKeymap(configuration, requestID: requestID)
     }
     func receive(_ snapshot: DeviceSnapshot) {
+        // 真实心跳继续运行，纯时间戳变化不让整个键盘编辑器和图表重新失效。
+        guard !snapshot.hasSamePresentation(as: device) else { return }
         let wasOnline = online
         device = snapshot
         if page == 2 && !wasOnline && online && lightingDraft == nil { lightingReadPending = true }

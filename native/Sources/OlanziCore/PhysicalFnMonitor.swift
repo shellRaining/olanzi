@@ -85,9 +85,10 @@ final class PhysicalFnMonitor {
             state.resetAfterInterruption()
             log.warning("修饰键监听中断，已清除缓存并重新启用。")
             CGEvent.tapEnable(tap: tap, enable: true)
-        }
-        guard CGEvent.tapIsEnabled(tap: tap) else {
-            throw PhysicalFnMonitorError(detail: "监听已暂停，请检查输入监控权限。")
+            // 健康路径复用首次检查结果；只有重新启用后才需要再次询问系统。
+            guard CGEvent.tapIsEnabled(tap: tap) else {
+                throw PhysicalFnMonitorError(detail: "监听已暂停，请检查输入监控权限。")
+            }
         }
         return state.flags
     }
